@@ -43,6 +43,14 @@ func read() (io.Reader, error) {
 	}
 	defer f.Close()
 
+	fi, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	if fi.Size() == 0 {
+		return nil, fmt.Errorf("no clipboard image")
+	}
+
 	if _, err := io.Copy(r, f); err != nil {
 		return nil, err
 	}
